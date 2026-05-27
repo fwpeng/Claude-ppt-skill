@@ -116,6 +116,44 @@ If the template contains title slides, section divider slides, content slides, c
 
 ---
 
+## Strict Template Preservation Rule
+Claude must not recreate the PPT design from scratch.
+
+When generating PowerPoint files, Claude should prioritize duplicating existing slides from the template and replacing only editable text content.
+
+Claude should preserve:
+- slide background
+- master layout
+- theme colors
+- decorative shapes
+- logos
+- footer elements
+- spacing
+- typography
+- image placeholders
+- visual hierarchy
+
+Claude should avoid:
+- creating blank slides from scratch
+- rebuilding the design manually with Python
+- changing the template background
+- replacing template decorations
+- inventing new layouts
+- using default PowerPoint layouts unless explicitly required
+
+The preferred workflow is:
+
+1. Open the existing PPT template.
+2. Identify reusable sample slides.
+3. Duplicate the most suitable template slide.
+4. Replace title and body text only.
+5. Preserve all background and non-text visual elements.
+6. Save the generated PPTX to `output/`.
+
+If the template style cannot be fully preserved with code, Claude should explain the limitation and ask the user to provide more sample slides rather than inventing a new design.
+
+---
+
 ## Default Presentation Rules
 Unless overridden by template rules:
 - use 16:9 widescreen layout
@@ -176,12 +214,14 @@ When asked to generate a PPT, Claude should follow this workflow:
 2. Identify the target audience
 3. Select the most appropriate template
 4. Read the matching template rule file
-5. Generate a slide outline
-6. Generate slide content
-7. Apply the selected PPT template
-8. Export the final editable PPTX file
-9. Save the generated file to `output/`
-10. Provide a concise summary of the generated file
+5. Open the selected PPT template
+6. Identify reusable sample slides
+7. Duplicate the most suitable template slides
+8. Replace only editable title and body text
+9. Preserve background, master layout, decorative shapes, logos, footer elements, and typography
+10. Export the final editable PPTX file
+11. Save the generated file to `output/`
+12. Provide a concise summary of the generated file
 
 Claude should avoid lengthy explanations unless the user explicitly asks for them.
 
@@ -219,6 +259,9 @@ When writing code for this project:
 - save generated PPT files in `output/`
 - avoid unnecessary comments
 - write code that is easy for Claude Code to modify later
+- do not recreate template backgrounds manually
+- do not create blank slides unless explicitly required
+- prefer duplicating existing template slides and replacing text content
 
 Recommended source files:
 ```text
@@ -286,6 +329,8 @@ Each rule file should define:
 - slide density
 - preferred slide types
 - forbidden styles
+- template preservation rules
+- reusable slide types
 
 Example:
 ```text
@@ -342,6 +387,7 @@ Generated PPT files should:
 - be editable in Microsoft PowerPoint
 - support business, academic, and professional scenarios
 - use the user's template as the visual source of truth
+- preserve the original background and non-text visual elements whenever possible
 
 ---
 
@@ -358,6 +404,8 @@ the template style should always win.
 
 Claude should only deviate from the template when the user explicitly requests it.
 
+Claude should not rebuild the template design from scratch if the existing template slides can be duplicated and edited.
+
 ---
 
 ## User Preference
@@ -365,7 +413,7 @@ The user wants this skill to reduce repeated prompting and save tokens.
 
 The user prefers template-based PPT generation so that future PPT files can be generated directly according to the user's own PPT templates with minimal manual editing.
 
-Claude should prioritize automation, consistency, and token efficiency.
+Claude should prioritize automation, consistency, template preservation, and token efficiency.
 
 ---
 
@@ -384,3 +432,5 @@ Possible future improvements:
 - automatic slide rewriting
 - automatic slide polishing
 - automatic speaker notes generation
+- template slide duplication workflow
+- placeholder-based PPT generation
